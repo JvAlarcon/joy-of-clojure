@@ -108,8 +108,8 @@
   (if (pos? x)
     (recur (+ sum x) (dec x))
     sum))
-(sum-down-from 0 10)
-(sum-down-from 0 0)
+;(sum-down-from 0 10)
+;(sum-down-from 0 0)
 
 ; You should when in two cases:
 ; - No else part is associated with the result of a conditional
@@ -135,7 +135,7 @@
 (age)
 (quote age)
 (quote (cons 1 [2 3]))
-(cons 1 (2 3))
+;(cons 1 (2 3))
 (quote (cons 1 (2 3)))
 ; Quote can be ' or `
 (cons 1 '(2 3))
@@ -214,6 +214,6 @@ java.util.Locale/JAPAN
 
 (throw-catch #(/ 10 5))
 (throw-catch #(/ 10 0))
-(throw-catch #(/ 10 "a"))
+;(throw-catch #(/ 10 "a"))
 (throw-catch #(throw (Exception. "Crybaby")))
 
