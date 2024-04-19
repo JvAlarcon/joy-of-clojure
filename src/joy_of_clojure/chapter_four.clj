@@ -1,3 +1,4 @@
+
 (ns joy-of-clojure.chapter-four)
 
 ; 4.1 Understanding precision
@@ -22,7 +23,8 @@
 ; => java.lang.Long - Long can hold large values
 
 (class (+ clueless 90000000000000000000))
-; => clojure.lang.BigInt - But when too large, the type promotes to BigInt
+                                        ; => clojure.lang.BigInt - But when too l
+arge, the type promotes to BigInt
 
 (class (+ clueless 9.0))
 ; => java.lang.Double - Floating-point doubles are contagious
@@ -99,7 +101,7 @@
 ; => 17N
 ; Associativity preserved
 
-; There are few rules of thumb to remember if you want to maintin perfect accurracy in your computations:
+; There are few rules of thumb to remember if you want to mantain perfect accurracy in your computations:
 ; - NEVER use Java math libraries unless they return results of BigDecimal, and even then be suspicious
 ; - Don't rationalize values that are Java float or double primitives
 ; - If you must write your own high-precision calculations, do so with rationals
@@ -116,3 +118,88 @@
 ; But if it's accuracy, then stick with rationals
 
 ; 4.3 When to use keywords
+:a-keyword
+::also-a-keyword
+
+; 4.3.1 Application of keywords
+; Keywords are almost always used as map keys
+
+; As Keys
+(def population {:youngs 2700 :elderly 900})
+(get population :youngs)
+
+(println (/ (get population :youngs)
+            (get population :elderly))
+         "Elderly per capita")
+
+; As Functions
+(:elderly population)
+(println (/ (:youngs population)
+            (:elderly population))
+         "Elderly per capita")
+; Using keywords as map-lookup fucntions leads to much more concise code
+
+; As Enumarations
+; Clojure code uses keywords as enumarations values, such as :small, :medium and :large. This provide a nice visual delineation in the source code
+
+; As Directives
+(defn pour [lb ub]
+  (cond
+    (= ub :toujours) (iterate inc lb)
+    :else (range lb ub)))
+
+; Called with lower and upper bounds, returns a range
+(pour 1 10)
+
+; Called with a keyword argument, iterates forever
+(pour 1 :toujours)
+
+; Another bonus with pour is that the macro cond uses a directive :else to mark the default conditional case.
+
+; 4.4 Symbolic resolution
+(identical? 'goat 'goat)
+; => false
+
+(= 'goat 'goat)
+; => true
+
+(name 'goat)
+
+; The identical? functions only return true when the symbols are the same object
+(let [x 'goat, y x]
+  (identical? x y))
+; => true
+
+; 4.4.1 Metadata
+; Clojure lets you attach metadata to various objects
+(let [x (with-meta 'goat {:ornery true})
+      y (with-meta 'goat {:ornery false})]
+  [(= x y)
+   (identical? x y)
+   (meta x)
+   (meta y)])
+; => [true false {:ornery true} {:ornery false}]
+
+; 4.5 Regular expressions
+
+; 4.5.1 Syntax
+#"an example pattern"
+(class #"an example pattern")
+; => java.util.regex.Pattern
+
+; In Java, any backslashes intended for consumption by the regex compiler must be doubled
+(java.util.regex.Pattern/compile "\\d")
+; => #"\d"
+; This isn't necessary in Clojure regex literals, as show by the undoubled return value
+
+; 4.5.2 Regular-expression functions
+(re-seq #"\w+" "one-two/three")
+; => ("one" "two" "three")
+
+; Capturing group in the regex causes each returned item to be a vector
+(re-seq #"\w*(\w)" "one-two/three")
+; => (["one" "e"] ["two" "o"] ["three" "e"])
+
+
+
+
